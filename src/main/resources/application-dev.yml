@@ -1,0 +1,8 @@
+spring.flyway.enabled: false
+
+app:
+  foo: bar
+  initialize-dummy-data: true
+
+spring:
+  h2.console.enabled: true
