@@ -9,7 +9,11 @@
 <body>
 <h1>Index Page</h1>
 
-<div><a href="/sub-page">Sub Page</a></div>
+<div>
+    <a href="/sub-page">Sub Page</a>
+    <a href="/request-param?projectId=a123">Request Param</a>
+    <a href="/query-param/123">Query Param</a>
+</div>
 
 <p>Config:<span th:inline="text">[[${foo}]]</span></p>
 </body>

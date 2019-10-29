@@ -39,7 +39,7 @@ public class PageController {
         return "frontend/with_parameter";
     }
 
-    @GetMapping("/query-param/{id}")
+    @GetMapping("/query-param/{id:[0-9]*}")
     public String withQueryParameter(@PathVariable(name = "id", required = false) int id, Model model) {
         model.addAttribute("id", id);
 
