@@ -14,7 +14,7 @@ public class WebConfiguration {
 
         @Override
         public void addViewControllers(ViewControllerRegistry registry) {
-            registry.addViewController("/" + adminPath).setViewName("redirect:/admin-center/");
+            registry.addViewController("/" + adminPath).setViewName("redirect:/" + adminPath + "/");
             registry.addViewController("/" + adminPath + "/").setViewName("forward:/" + adminPath + "/index.html");
         }
     }
