@@ -12,7 +12,7 @@
     <artifactId>project</artifactId>
     <version>1.0.0</version>
     <name>project</name>
-    <description>Demo project for Spring Boot</description>
+    <description>Spring React Template</description>
 
     <properties>
         <java.version>1.8</java.version>
