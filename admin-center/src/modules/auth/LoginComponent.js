@@ -4,9 +4,11 @@ import {withRouter} from "react-router";
 class LoginComponent extends Component {
 	render() {
 		return (
-			<div>
-
-			</div>
+			<form>
+				<div><input type="text" placeholder="username"/></div>
+				<div><input type="password" placeholder="password"/></div>
+				<div><button type="submit">Login</button></div>
+			</form>
 		);
 	}
 }
