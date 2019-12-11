@@ -1,19 +1,26 @@
 import React, {Component} from 'react';
-import {withRouter} from "react-router-dom";
+import {Redirect} from 'react-router-dom';
 
 class Preferences extends Component {
 
-  backToHome = () => {
-    this.props.history.push(`/`);
-  };
+	state = {
+		redirect: ''
+	};
 
-  render() {
-    return (
-      <div>
-        Preferences. <button onClick={this.backToHome}>Back to home</button>
-      </div>
-    );
-  }
+	backToHome = () => {
+		this.setState({redirect: '/'});
+	};
+
+	render() {
+		if (this.state.redirect !== '') {
+			return <Redirect to={this.state.redirect}/>;
+		}
+		return (
+			<div>
+				Preferences. <button onClick={this.backToHome}>Back to home</button>
+			</div>
+		);
+	}
 }
 
-export default withRouter(Preferences);
+export default Preferences;
