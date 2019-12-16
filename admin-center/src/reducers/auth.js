@@ -1,9 +1,9 @@
-import {LOGIN_REQUEST, LOGOUT_REQUEST} from "../actions/auth_action.h";
+import {APP_NOT_READY, APP_READY, LOGIN_REQUEST, LOGOUT_REQUEST} from "../actions/auth_action.h";
 
 const initialState = {
   authenticated: false,
   username: '',
-  authLevel: 0
+  appReady: false
 };
 
 export default (state = initialState, action) => {
@@ -13,7 +13,7 @@ export default (state = initialState, action) => {
         ...state,
         authenticated: action.payload.authenticated,
         username: action.payload.username,
-        authLevel: action.payload.authLevel,
+        appReady: true,
       };
 
     case LOGOUT_REQUEST:
@@ -21,7 +21,19 @@ export default (state = initialState, action) => {
         ...state,
         authenticated: false,
         username: '',
-        authLevel: '',
+        appReady: true,
+      };
+
+    case APP_NOT_READY:
+      return {
+        ...state,
+        appReady: false
+      };
+
+    case APP_READY:
+      return {
+        ...state,
+        appReady: true
       };
 
     default:

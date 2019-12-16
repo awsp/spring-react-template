@@ -1,2 +1,5 @@
 export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGOUT_REQUEST = 'LOGOUT_REQUEST';
+export const LS_KEY = 'PROJECT_LOCAL_STORAGE_KEY';
+export const APP_READY = 'APP_READY';
+export const APP_NOT_READY = 'APP_NOT_READY';
