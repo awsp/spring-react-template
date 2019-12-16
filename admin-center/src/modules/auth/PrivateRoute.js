@@ -4,14 +4,20 @@ import PropTypes from 'prop-types';
 
 class PrivateRoute extends Component {
   render() {
-    return (
-      this.props.auth ? <Route {...this.props} /> : <Redirect to="/login"/>
-    );
+    let content;
+    if (this.props.ready) {
+      content = this.props.auth ? <Route {...this.props} /> : <Redirect to="/login"/>
+    } else {
+      return <></>;
+    }
+
+    return content;
   }
 }
 
 PrivateRoute.propTypes = {
-  auth: PropTypes.bool.isRequired
+  auth: PropTypes.bool.isRequired,
+  ready: PropTypes.bool.isRequired,
 };
 
 export default PrivateRoute;
