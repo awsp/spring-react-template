@@ -14,49 +14,49 @@ import './App.css';
 
 class App extends Component {
 
-	componentDidMount() {
-		this.props.checkAuthStatus();
-	}
+  componentDidMount() {
+    this.props.checkAuthStatus();
+  }
 
-	render() {
-		return (
-			<div>
-				<Router>
-					<h1>Admin Center</h1>
+  render() {
+    return (
+      <div>
+        <Router>
+          <h1>Admin Center</h1>
 
-					<nav>
-						<Link to="/"> / </Link> |
-						<Link to="/preferences"> /Preferences </Link> |
-						<Link to="/login"> /Login</Link> | {' '}
-						<button onClick={this.props.logout}>Logout</button>
-					</nav>
+          <nav>
+            <Link to="/"> / </Link> |
+            <Link to="/preferences"> /Preferences </Link> |
+            <Link to="/login"> /Login</Link> | {' '}
+            <button onClick={this.props.logout}>Logout</button>
+          </nav>
 
-					<Switch>
-						<PrivateRoute path="/" exact
-						              component={Dashboard}
-						              auth={this.props.authenticated}
-						              ready={this.props.ready}/>
-						<PrivateRoute path="/preferences"
-						              component={Preferences}
-						              auth={this.props.authenticated}
-						              ready={this.props.ready}/>
-						<Route path="/login" exact component={Login}/>
-						<Route component={NotFound}/>
-					</Switch>
-				</Router>
-			</div>
-		);
-	}
+          <Switch>
+            <PrivateRoute path="/" exact
+                          component={Dashboard}
+                          auth={this.props.authenticated}
+                          ready={this.props.ready}/>
+            <PrivateRoute path="/preferences"
+                          component={Preferences}
+                          auth={this.props.authenticated}
+                          ready={this.props.ready}/>
+            <Route path="/login" exact component={Login}/>
+            <Route component={NotFound}/>
+          </Switch>
+        </Router>
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = state => ({
-	authenticated: state.auth.authenticated,
-	ready: state.auth.appReady
+  authenticated: state.auth.authenticated,
+  ready: state.auth.appReady
 });
 
 const mapDispatchToProps = dispatch => ({
-	logout: bindActionCreators(logoutRequest, dispatch),
-	checkAuthStatus: bindActionCreators(checkAuthStatus, dispatch)
+  logout: bindActionCreators(logoutRequest, dispatch),
+  checkAuthStatus: bindActionCreators(checkAuthStatus, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
