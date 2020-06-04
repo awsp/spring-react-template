@@ -6,3 +6,4 @@ app:
 
 spring:
   h2.console.enabled: true
+  devtools.remote.secret: secret
