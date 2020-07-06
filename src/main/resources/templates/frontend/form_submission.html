@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Form Submission</title>
+  <meta content="text/html; charset=utf-8" http-equiv="content-type"/>
+  <meta content="" name="description"/>
+  <meta content="" name="keywords"/>
+</head>
+<body>
+<h1>Index Page</h1>
+<a href="/">Index Page</a>
+
+<form action="/form-submission" method="post">
+  <p>
+    <label for="username">Username</label>
+    <input type="text" name="username" id="username" />
+  </p>
+
+  <p>
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password"/>
+  </p>
+
+  <p>
+    <input type="submit" value="Submit" />
+  </p>
+</form>
+
+</body>
+</html>
