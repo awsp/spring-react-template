@@ -1,19 +1,34 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Index Page</title>
-    <meta content="text/html; charset=utf-8" http-equiv="content-type"/>
-    <meta content="" name="description"/>
-    <meta content="" name="keywords"/>
+  <title>Index Page</title>
+  <meta content="text/html; charset=utf-8" http-equiv="content-type"/>
+  <meta content="" name="description"/>
+  <meta content="" name="keywords"/>
+  <style type="text/css">
+    nav a {
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    nav a:not(:last-child):after {
+      content: ' | ';
+    }
+  </style>
 </head>
 <body>
 <h1>Index Page</h1>
 
-<div>
-    <a href="/sub-page">Sub Page</a>
-    <a href="/request-param?projectId=a123">Request Param</a>
-    <a href="/query-param/123">Query Param</a>
-</div>
+<nav>
+  <a href="/sub-page">Sub Page</a>
+  <a href="/request-param?projectId=a123">Request Param</a>
+  <a href="/query-param/123">Query Param</a>
+  <a href="/form-submission">Form Submission</a>
+</nav>
 
 <p>Config: <span th:inline="text">[[${foo}]]</span></p>
 

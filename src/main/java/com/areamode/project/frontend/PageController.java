@@ -2,6 +2,7 @@ package com.areamode.project.frontend;
 
 import com.areamode.project.config.ApplicationConfiguration;
 import com.areamode.project.domain.Sample;
+import com.areamode.project.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,5 +49,16 @@ public class PageController {
     @PostMapping("/submit")
     public String submit(@ModelAttribute Sample sample) {
         return "frontend/result";
+    }
+
+    @GetMapping("/form-submission")
+    public String formSubmission() {
+        return "frontend/form_submission";
+    }
+
+    @PostMapping("/form-submission")
+    public String handleFormSubmission(@ModelAttribute User user, Model model) {
+        model.addAttribute("username", user.getUsername());
+        return "frontend/form_result";
     }
 }
