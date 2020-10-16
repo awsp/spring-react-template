@@ -6,6 +6,9 @@ services:
     image: "minio/minio"
     command: "minio server /data"
     restart: unless-stopped
+    environment:
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
     ports:
       - "9000:9000"
     volumes:
