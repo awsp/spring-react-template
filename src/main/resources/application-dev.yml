@@ -7,3 +7,9 @@ app:
 spring:
   h2.console.enabled: true
   devtools.remote.secret: secret
+
+minio:
+  access-key: minioadmin
+  access-secret: minioadmin
+  bucket-name: foo
+  endpoint: http://127.0.0.1:9000

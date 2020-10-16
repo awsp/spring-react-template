@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  minio-server:
+    container_name: minio-server
+    image: "minio/minio"
+    command: "minio server /data"
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./minio:/data
