@@ -5,30 +5,34 @@ import com.github.awsp.security.config.JwtProperties;
 import com.github.awsp.security.exception.UserNotFoundException;
 import com.github.awsp.security.model.RefreshToken;
 import com.github.awsp.security.repo.RefreshTokenRepository;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.time.Instant;
+import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
 
-@Service
+@Component
 @Slf4j
 @RequiredArgsConstructor
-public class JwtTokenService {
+public class JwtTokenProvider {
 
     private final JwtProperties jwtProperties;
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
+    private String secretKey;
+
+
+    @PostConstruct
+    protected void init() {
+        secretKey = Base64.getEncoder().encodeToString(jwtProperties.getSecretKey().getBytes());
+    }
 
     public String generateJwtToken(final UserDetails userDetails) {
         return generateJwtTokenFromUsername(userDetails.getUsername());
@@ -39,7 +43,7 @@ public class JwtTokenService {
                 .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtProperties.getValidityInMs()))
-                .signWith(SignatureAlgorithm.HS512, jwtProperties.getSecretKey())
+                .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact();
     }
 
@@ -55,7 +59,7 @@ public class JwtTokenService {
 
     public String getUsernameFromJwtToken(final String token) {
         return Jwts.parser()
-                .setSigningKey(jwtProperties.getSecretKey())
+                .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
@@ -63,10 +67,10 @@ public class JwtTokenService {
 
     public boolean validateJwtToken(final String jwtToken) {
         try {
-            Jwts.parser()
-                    .setSigningKey(jwtProperties.getSecretKey())
+            Jws<Claims> claims = Jwts.parser()
+                    .setSigningKey(secretKey)
                     .parseClaimsJws(jwtToken);
-            return true;
+            return !claims.getBody().getExpiration().before(new Date());
         } catch (SignatureException e) {
             log.error("Invalid JWT signature: {}", e.getMessage());
         } catch (MalformedJwtException e) {

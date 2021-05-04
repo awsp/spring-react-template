@@ -20,4 +20,4 @@ Content-Type: application/json
 
 GET http://localhost:8080/api/sample
 Content-Type: application/json
-Authorization: Bearer
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyQGRvbWFpbi5jb20iLCJpYXQiOjE2MjAxMDU3OTEsImV4cCI6MTYyMDEwNzU5MX0.XK9WUNph4s-lismQj2Io8WdQaCLlGSBbaQDn5l7b1tc1xX5wALnPU1xxVyUYo3ZRD3MZdT-hUDfjZo80537UaQ

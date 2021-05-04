@@ -1,7 +1,7 @@
 package com.github.awsp.security;
 
-import com.github.awsp.security.service.JwtTokenService;
-import lombok.RequiredArgsConstructor;
+import com.github.awsp.security.service.JwtTokenProvider;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,9 +17,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 public class AuthTokenFilter extends OncePerRequestFilter {
 
-    private JwtTokenService jwtTokenService;
+    private JwtTokenProvider jwtTokenProvider;
     private UserDetailsService userDetailsService;
     private static final String AUTH_TYPE = "Bearer ";
 
@@ -27,15 +28,15 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String jwt = parseJwt(request);
-            if (jwt != null && jwtTokenService.validateJwtToken(jwt)) {
-                String username = jwtTokenService.getUsernameFromJwtToken(jwt);
+            if (jwt != null && jwtTokenProvider.validateJwtToken(jwt)) {
+                String username = jwtTokenProvider.getUsernameFromJwtToken(jwt);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
-            // Do something here
+            log.error(e.getMessage());
         }
 
         filterChain.doFilter(request, response);
@@ -52,8 +53,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     }
 
     @Autowired
-    public void setJwtTokenService(JwtTokenService jwtTokenService) {
-        this.jwtTokenService = jwtTokenService;
+    public void setJwtTokenService(JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Autowired

@@ -23,7 +23,7 @@ public class DbAuthenticationService implements AuthenticationService {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder encoder;
-    private final JwtTokenService jwtTokenService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public User signupUser(SignupRequest signupRequest) throws UserAlreadyExistException {
@@ -46,8 +46,8 @@ public class DbAuthenticationService implements AuthenticationService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         try {
-            String jwtToken = jwtTokenService.generateJwtToken(userDetails);
-            String refreshToken = jwtTokenService.generateJwtRefreshToken(userDetails);
+            String jwtToken = jwtTokenProvider.generateJwtToken(userDetails);
+            String refreshToken = jwtTokenProvider.generateJwtRefreshToken(userDetails);
 
             return JwtResponse.builder()
                     .username(userDetails.getUsername())
