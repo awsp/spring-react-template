@@ -1,10 +1,14 @@
 package com.github.awsp.security.controller;
 
 import com.github.awsp.model.User;
+import com.github.awsp.security.exception.RefreshTokenException;
+import com.github.awsp.security.exception.RefreshTokenExpiredException;
 import com.github.awsp.security.exception.UserAlreadyExistException;
 import com.github.awsp.security.payload.request.LoginRequest;
+import com.github.awsp.security.payload.request.RefreshTokenRequest;
 import com.github.awsp.security.payload.request.SignupRequest;
 import com.github.awsp.security.payload.response.JwtResponse;
+import com.github.awsp.security.payload.response.RefreshTokenResponse;
 import com.github.awsp.security.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -42,6 +46,18 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unable to process");
         } catch (UserAlreadyExistException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
+        try {
+            JwtResponse jwtResponse = authenticationService.refreshToken(request);
+            return ResponseEntity.ok(jwtResponse);
+        } catch (RefreshTokenException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        } catch (RefreshTokenExpiredException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
 

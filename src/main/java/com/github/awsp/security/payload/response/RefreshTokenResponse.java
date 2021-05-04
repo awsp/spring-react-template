@@ -10,5 +10,6 @@ import lombok.Data;
 public class RefreshTokenResponse {
     private String token;
     private String refreshToken;
-    private String tokenType;
+    @Builder.Default
+    private String tokenType = "Bearer";
 }
