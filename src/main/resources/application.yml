@@ -2,3 +2,8 @@ server.port: 8080
 spring.profiles.active: dev
 
 spring.application.name: Sample Project
+
+jwt:
+  secret-key: secret123
+  validity-in-ms: 1800001
+  refresh-token-validity-in-ms: 259200001

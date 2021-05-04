@@ -1,0 +1,23 @@
+POST http://localhost:8080/auth/signup
+Content-Type: application/json
+
+{
+  "username": "user@domain.com",
+  "password": "password"
+}
+
+###
+
+POST http://localhost:8080/auth/signin
+Content-Type: application/json
+
+{
+  "username": "user@domain.com",
+  "password": "password"
+}
+
+###
+
+GET http://localhost:8080/api/sample
+Content-Type: application/json
+Authorization: Bearer
