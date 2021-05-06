@@ -47,7 +47,7 @@ public class JwtTokenProvider {
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setUser(user);
         refreshToken.setExpiration(Instant.now().plusMillis(jwtProperties.getRefreshTokenValidityInMs()));
-        refreshToken.setToken(UUID.randomUUID().toString());
+        refreshToken.setToken(Base64.getEncoder().encodeToString(UUID.randomUUID().toString().getBytes()));
 
         return refreshToken;
     }

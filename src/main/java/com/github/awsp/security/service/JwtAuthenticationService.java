@@ -5,7 +5,6 @@ import com.github.awsp.repo.UserRepository;
 import com.github.awsp.security.exception.RefreshTokenException;
 import com.github.awsp.security.exception.RefreshTokenExpiredException;
 import com.github.awsp.security.exception.UserAlreadyExistException;
-import com.github.awsp.security.exception.UserNotFoundException;
 import com.github.awsp.security.model.RefreshToken;
 import com.github.awsp.security.payload.request.LoginRequest;
 import com.github.awsp.security.payload.request.RefreshTokenRequest;
@@ -22,7 +21,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +37,9 @@ public class JwtAuthenticationService implements AuthenticationService {
     private final PasswordEncoder encoder;
     private final JwtTokenProvider jwtTokenProvider;
 
+    private static final List<String> AVAILABLE_ROLES = Arrays.asList("USER", "ADMIN");
+    private static final int DEFAULT_ROLE = 0;
+
     @Override
     public User signupUser(SignupRequest signupRequest) throws UserAlreadyExistException {
         if (userRepository.existsUserByUsername(signupRequest.getUsername())) {
@@ -43,9 +49,22 @@ public class JwtAuthenticationService implements AuthenticationService {
         User user = User.builder()
                 .username(signupRequest.getUsername())
                 .password(encoder.encode(signupRequest.getPassword()))
+                .roles(getRoles(signupRequest.getRoles()))
                 .build();
 
         return userRepository.save(user);
+    }
+
+    private Set<String> getRoles(Set<String> roles) {
+        if (roles == null) {
+            roles = new HashSet<>();
+        }
+        roles.removeIf(role -> !AVAILABLE_ROLES.contains(role));
+
+        if (roles.isEmpty()) {
+            roles.add(AVAILABLE_ROLES.get(DEFAULT_ROLE));
+        }
+        return roles;
     }
 
     @Override
@@ -59,11 +78,14 @@ public class JwtAuthenticationService implements AuthenticationService {
         return userRepository
                 .findByUsername(userDetails.getUsername())
                 .map(user -> {
-                    // TODO: check for duplicate
-                    RefreshToken refreshToken = refreshTokenRepository.save(jwtTokenProvider.generateJwtRefreshToken(user));
+                    // We don't want duplicate refresh token
+                    RefreshToken refreshToken = refreshTokenRepository.findByUser(user)
+                            .filter(jwtTokenProvider::verifyRefreshToken)
+                            .orElseGet(() -> refreshTokenRepository.save(jwtTokenProvider.generateJwtRefreshToken(user)));
+
                     return JwtResponse.builder()
                             .username(userDetails.getUsername())
-                            .token(jwtToken)
+                            .accessToken(jwtToken)
                             .refreshToken(refreshToken.getToken())
                             .build();
                 })
@@ -87,7 +109,7 @@ public class JwtAuthenticationService implements AuthenticationService {
             String token = jwtTokenProvider.generateJwtTokenFromUsername(refreshToken.getUser().getUsername());
             return JwtResponse.builder()
                     .username(refreshToken.getUser().getUsername())
-                    .token(token)
+                    .accessToken(token)
                     .refreshToken(requestedRefreshToken)
                     .build();
         } else {

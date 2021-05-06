@@ -18,9 +18,15 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/api/sample
+GET http://localhost:8080/api/sample/admin
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyQGRvbWFpbi5jb20iLCJpYXQiOjE2MjAxMTI0NjIsImV4cCI6MTYyMDExNDI2Mn0.8269xNrJ00LTVCuVe7cXiWAsF5LZNrEj2qyIdgiBzfwzaiBLJWPTo2bpc-Mca6RIygo8YGmQDRMWo0c8Au87tQ
+Authorization: Bearer
+
+###
+
+GET http://localhost:8080/api/sample/user
+Content-Type: application/json
+Authorization: Bearer
 
 ###
 
@@ -28,6 +34,6 @@ POST http://localhost:8080/auth/refresh-token
 Content-Type: application/json
 
 {
-  "refreshToken": "ec7baac2-d092-4302-8abc-bfbe09fed79c",
-  "token": "eyJhbGci1iJIUzUxMiJ9.eyJzdWIiOiJ1c2VyQGRvbWFpbi5jb20iLCJpYXQiOjE2MjAxMTI0NjIsImV4cCI6MTYyMDExNDI2Mn0.8269xNrJ00LTVCuVe7cXiWAsF5LZNrEj2qyIdgiBzfwzaiBLJWPTo2bpc-Mca6RIygo8YGmQDRMWo0c8Au87tQ"
+  "refreshToken": "",
+  "token": ""
 }

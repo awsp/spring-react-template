@@ -34,7 +34,6 @@ public class AuthController {
         return ResponseEntity.ok(jwtResponse);
     }
 
-    // TODO: disable when not needed
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@Valid @RequestBody SignupRequest signupRequest) {
         try {
