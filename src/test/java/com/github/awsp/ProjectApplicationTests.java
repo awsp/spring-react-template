@@ -1,4 +1,4 @@
-package com.areamode.project;
+package com.github.awsp;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

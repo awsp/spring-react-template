@@ -80,7 +80,7 @@ public class JwtAuthenticationService implements AuthenticationService {
                 .map(user -> {
                     // We don't want duplicate refresh token
                     RefreshToken refreshToken = refreshTokenRepository.findByUser(user)
-                            .filter(jwtTokenProvider::verifyRefreshToken)
+                            .filter(jwtTokenProvider::isValidRefreshToken)
                             .orElseGet(() -> refreshTokenRepository.save(jwtTokenProvider.generateJwtRefreshToken(user)));
 
                     return JwtResponse.builder()
@@ -96,11 +96,11 @@ public class JwtAuthenticationService implements AuthenticationService {
     public JwtResponse refreshToken(RefreshTokenRequest refreshTokenRequest) throws RefreshTokenExpiredException, RefreshTokenException {
         String requestedRefreshToken = refreshTokenRequest.getRefreshToken();
         Optional<RefreshToken> byToken = refreshTokenRepository.findByToken(requestedRefreshToken);
-        if (byToken.isPresent() && jwtTokenProvider.isValidJwtToken(refreshTokenRequest.getToken())) {
+        if (byToken.isPresent() && jwtTokenProvider.isJwtToken(refreshTokenRequest.getToken())) {
             RefreshToken refreshToken = byToken.get();
 
             // Delete refresh token if it is already expired.
-            if (!jwtTokenProvider.verifyRefreshToken(refreshToken)) {
+            if (!jwtTokenProvider.isValidRefreshToken(refreshToken)) {
                 refreshTokenRepository.delete(refreshToken);
                 throw new RefreshTokenExpiredException();
             }

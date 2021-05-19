@@ -30,10 +30,22 @@ public class JwtTokenProvider {
         secretKey = Base64.getEncoder().encodeToString(jwtProperties.getSecretKey().getBytes());
     }
 
+    /**
+     * Generate JWT token from UserDetails
+     *
+     * @param userDetails userDetails
+     * @return JWT token
+     */
     public String generateJwtToken(final UserDetails userDetails) {
         return generateJwtTokenFromUsername(userDetails.getUsername());
     }
 
+    /**
+     * Generate JWT token a username
+     *
+     * @param username username
+     * @return token in String
+     */
     public String generateJwtTokenFromUsername(final String username) {
         return Jwts.builder()
                 .setSubject(username)
@@ -43,6 +55,12 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    /**
+     * Generate a Base64-based token for refresh token
+     *
+     * @param user the User model
+     * @return refresh token object
+     */
     public RefreshToken generateJwtRefreshToken(User user) {
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setUser(user);
@@ -52,6 +70,12 @@ public class JwtTokenProvider {
         return refreshToken;
     }
 
+    /**
+     * Get username from JWT token
+     *
+     * @param token JWT token
+     * @return username
+     */
     public String getUsernameFromJwtToken(final String token) {
         return Jwts.parser()
                 .setSigningKey(secretKey)
@@ -60,7 +84,13 @@ public class JwtTokenProvider {
                 .getSubject();
     }
 
-    public boolean validateJwtToken(final String jwtToken) {
+    /**
+     * Validate JWT token and it must not expire
+     *
+     * @param jwtToken JWT token to be examined
+     * @return true if valid, false if invalid
+     */
+    public boolean isValidJwtToken(final String jwtToken) {
         try {
             Jws<Claims> claims = Jwts.parser()
                     .setSigningKey(secretKey)
@@ -81,7 +111,13 @@ public class JwtTokenProvider {
         return false;
     }
 
-    public boolean isValidJwtToken(final String jwtToken) {
+    /**
+     * Simply validate if a given jwt token is valid regardless if it has expired or not.
+     *
+     * @param jwtToken JWT token to be examined
+     * @return true if valid, false if invalid
+     */
+    public boolean isJwtToken(final String jwtToken) {
         try {
             Jws<Claims> claims = Jwts.parser()
                     .setSigningKey(secretKey)
@@ -95,7 +131,13 @@ public class JwtTokenProvider {
         }
     }
 
-    public boolean verifyRefreshToken(RefreshToken token) {
+    /**
+     * Validate a given refresh token is valid and not expired
+     *
+     * @param token refresh token
+     * @return true for valid, false for invalid
+     */
+    public boolean isValidRefreshToken(RefreshToken token) {
         return token.getExpiration().compareTo(Instant.now()) >= 0;
     }
 }
