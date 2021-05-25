@@ -18,15 +18,38 @@ Content-Type: application/json
 
 ###
 
+POST http://localhost:8080/auth/signup
+Content-Type: application/json
+
+{
+  "username": "admin@domain.com",
+  "password": "password",
+  "roles": [
+    "ADMIN"
+  ]
+}
+
+###
+
+POST http://localhost:8080/auth/signin
+Content-Type: application/json
+
+{
+  "username": "admin@domain.com",
+  "password": "password"
+}
+
+###
+
 GET http://localhost:8080/api/sample/admin
 Content-Type: application/json
-Authorization: Bearer
+Authorization: Bearer [token]
 
 ###
 
 GET http://localhost:8080/api/sample/user
 Content-Type: application/json
-Authorization: Bearer
+Authorization: Bearer [token]
 
 ###
 
