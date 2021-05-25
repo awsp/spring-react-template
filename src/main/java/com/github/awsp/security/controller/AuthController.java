@@ -8,7 +8,6 @@ import com.github.awsp.security.payload.request.LoginRequest;
 import com.github.awsp.security.payload.request.RefreshTokenRequest;
 import com.github.awsp.security.payload.request.SignupRequest;
 import com.github.awsp.security.payload.response.JwtResponse;
-import com.github.awsp.security.payload.response.RefreshTokenResponse;
 import com.github.awsp.security.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
