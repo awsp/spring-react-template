@@ -4,12 +4,13 @@ services:
   minio-server:
     container_name: minio-server
     image: "minio/minio"
-    command: "minio server /data"
+    command: minio server /data --console-address ":9001"
     restart: unless-stopped
     environment:
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
     ports:
       - "9000:9000"
+      - "9001:9001"
     volumes:
       - ./minio:/data
