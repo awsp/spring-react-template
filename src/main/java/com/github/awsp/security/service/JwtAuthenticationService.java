@@ -37,7 +37,7 @@ public class JwtAuthenticationService implements AuthenticationService {
     private final PasswordEncoder encoder;
     private final JwtTokenProvider jwtTokenProvider;
 
-    private static final List<String> AVAILABLE_ROLES = Arrays.asList("USER", "ADMIN");
+    private static final List<String> AVAILABLE_ROLES = Arrays.asList("USER", "MODERATOR", "ADMIN");
     private static final int DEFAULT_ROLE = 0;
 
     @Override
@@ -79,7 +79,7 @@ public class JwtAuthenticationService implements AuthenticationService {
                 .findByUsername(userDetails.getUsername())
                 .map(user -> {
                     // We don't want duplicate refresh token
-                    RefreshToken refreshToken = refreshTokenRepository.findByUser(user)
+                    RefreshToken refreshToken = refreshTokenRepository.findFirstByUserOrderByExpirationDesc(user)
                             .filter(jwtTokenProvider::isValidRefreshToken)
                             .orElseGet(() -> refreshTokenRepository.save(jwtTokenProvider.generateJwtRefreshToken(user)));
 
@@ -95,7 +95,7 @@ public class JwtAuthenticationService implements AuthenticationService {
     @Override
     public JwtResponse refreshToken(RefreshTokenRequest refreshTokenRequest) throws RefreshTokenExpiredException, RefreshTokenException {
         String requestedRefreshToken = refreshTokenRequest.getRefreshToken();
-        Optional<RefreshToken> byToken = refreshTokenRepository.findByToken(requestedRefreshToken);
+        Optional<RefreshToken> byToken = refreshTokenRepository.findFirstByTokenOrderByExpirationDesc(requestedRefreshToken);
         if (byToken.isPresent() && jwtTokenProvider.isJwtToken(refreshTokenRequest.getToken())) {
             RefreshToken refreshToken = byToken.get();
 

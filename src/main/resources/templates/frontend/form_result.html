@@ -11,7 +11,16 @@
 <a href="/">Index Page</a>
 
 <div>
-  Username submitted: <span th:text="${username}">-</span>
+  <h2>Authenticated</h2>
+  <p>
+    Username submitted: <span th:text="${username}">-</span>
+  </p>
+  <p>
+    Bearer Token: <code th:text="${bearerToken}">-</code>
+  </p>
+  <p>
+    Refresh Token: <code th:text="${refreshToken}">-</code>
+  </p>
 </div>
 
 </body>

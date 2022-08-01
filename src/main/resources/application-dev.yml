@@ -1,3 +1,4 @@
+
 spring.flyway.enabled: false
 
 app:
@@ -18,3 +19,6 @@ minio:
   access-secret: minioadmin
   bucket-name: foo
   endpoint: http://127.0.0.1:9000
+
+server:
+  port: 8012

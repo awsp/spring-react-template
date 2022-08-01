@@ -3,7 +3,11 @@ package com.github.awsp.frontend;
 import com.github.awsp.config.ApplicationConfiguration;
 import com.github.awsp.model.Sample;
 import com.github.awsp.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.github.awsp.security.payload.request.LoginRequest;
+import com.github.awsp.security.payload.response.JwtResponse;
+import com.github.awsp.security.service.AuthenticationService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,15 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RequestMapping("/")
+@RequiredArgsConstructor
 @Controller
 public class PageController {
 
     private final ApplicationConfiguration configuration;
+    private final AuthenticationService authenticationService;
 
-    @Autowired
-    public PageController(ApplicationConfiguration configuration) {
-        this.configuration = configuration;
-    }
 
     @GetMapping("/")
     public String index(Model model) {
@@ -62,8 +64,21 @@ public class PageController {
     }
 
     @PostMapping("/form-submission")
-    public String handleFormSubmission(@ModelAttribute User user, Model model) {
+    public String handleFormSubmission(@ModelAttribute final User user,
+                                       final Model model) {
+        JwtResponse jwtResponse = authenticationService.signInUser(LoginRequest.builder()
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .build());
+
+        String accessToken = jwtResponse.getAccessToken();
         model.addAttribute("username", user.getUsername());
-        return "frontend/form_result";
+        model.addAttribute("bearerToken", accessToken);
+        model.addAttribute("refreshToken", jwtResponse.getRefreshToken());
+
+        if (SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
+            return "frontend/form_result";
+        }
+        return "frontend/403";
     }
 }

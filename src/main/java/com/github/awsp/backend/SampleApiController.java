@@ -2,10 +2,12 @@ package com.github.awsp.backend;
 
 import com.github.awsp.repo.SampleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/api/sample")
@@ -36,9 +38,16 @@ public class SampleApiController {
         return ResponseEntity.ok().body("Hi, Admin");
     }
 
+    @GetMapping("/moderator")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR')")
+    public ResponseEntity<?> withModeratorOrAbove() {
+        return ResponseEntity.ok().body("Hi, Admin or moderator");
+    }
+
     @GetMapping("/any")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    public ResponseEntity<?> withAnyRole() {
-        return ResponseEntity.ok().body("Hi, Admin or User");
+    @ResponseStatus(value = HttpStatus.OK)
+    public String withAnyRole() {
+        return "Any roles";
     }
 }
