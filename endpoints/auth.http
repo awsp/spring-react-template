@@ -1,0 +1,16 @@
+### Sign in
+POST {{apiBase}}/auth/signin
+Content-Type: application/json
+
+{
+  "username": "root@localhost",
+  "password": "password"
+}
+
+### Admin only page
+GET {{apiBase}}/secured/admin
+Authorization: Bearer {{bearerToken}}
+
+### Admin / User page
+GET {{apiBase}}/secured/user
+Authorization: Bearer {{bearerToken}}
